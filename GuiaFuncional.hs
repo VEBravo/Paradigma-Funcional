@@ -1,4 +1,3 @@
-import System.Win32 (COORD(yPos))
 -- EJERCICIO 1
 -- Definir la función esMultiploDeTres/1, que devuelve True si un número es múltiplo de 3
 esMultiploDeTres :: Int -> Bool
