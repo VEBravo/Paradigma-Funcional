@@ -12,7 +12,7 @@ porcentajeIncremento x | x>=24 = 2.2
                        | otherwise = 1
 
 cantHoras :: Float -> Int
-cantHoras x | x>=50 && x>0 = round (x/10)
+cantHoras x | x<=50 && x>0 = round (x/10)
             | otherwise = 0
 
 sueldo :: String -> Float -> Float -> Float
