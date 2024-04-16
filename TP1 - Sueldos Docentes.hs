@@ -1,21 +1,33 @@
 basicoPorCargo :: String -> Float
-basicoPorCargo x | x=="titular" = 149000
-                 | x=="adjunto" = 116000
-                 | x=="ayudante"= 66000
-                 | otherwise = 0
+basicoPorCargo cargo
+                 | cargo=="titular" = 149000
+                 | cargo=="adjunto" = 116000
+                 | cargo=="ayudante"= 66000
 
 porcentajeIncremento :: Float -> Float
-porcentajeIncremento x | x>=24 = 2.2
-                       | x>=10 = 1.5
-                       | x>=5 = 1.3
-                       | x>=3 = 1.2
-                       | otherwise = 1
+porcentajeIncremento anios 
+    | anios>=24 = 120
+    | anios>=10 = 50
+    | anios>=5 = 30
+    | anios>=3 = 20
+    | otherwise = 0
 
-cantHoras :: Float -> Int
-cantHoras x | x<=50 && x>0 = round (x/10)
-            | otherwise = 0
+porcentaje anios = 1 + (porcentajeIncremento anios)/100
+
+bonificacionHoras :: Float -> Int
+bonificacionHoras x | x<=50 && x>=5 = round (x/10)
 
 sueldo :: String -> Float -> Float -> Float
-sueldo x y z = basicoPorCargo x * porcentajeIncremento y * fromIntegral (cantHoras z)
+sueldo cargo anios horas = basicoPorCargo cargo * porcentaje (anios) * fromIntegral (bonificacionHoras horas)
 
+--TP PT 2
+diferenciaFamiliar sueldo canasta paritaria inflacion = 
+    (porcentaje paritaria) sueldo - porcentaje inflacion canasta
 
+paraLlegarAFinDeMes cargo anios horas integrantes paritaria inflacion= 
+    diferenciaFamiliar (sueldoDocente cargo anios horas) (canastaFamiliar integrantes) paritaria inflacion
+
+canastaFamiliar 1 = 126000
+canastaFamiliar 3 = 310000
+canastaFamiliar 4 = 390000
+canastaFamiliar 5 = 410000 
