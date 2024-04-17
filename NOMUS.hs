@@ -18,16 +18,42 @@ data Nomus = Nomus {
     cantOjos :: Int,
     colorDePiel :: String,
     cantVida :: Float,
-    fuerza :: Float
+    fuerza :: Float,
+    poder :: [Poder]
 } deriving (Show)
 
+data Poder = Poder {
+    cantCuracion :: Int,
+    cantDanio :: Int,
+    rango :: Int,
+    probabilidadDanioCritico :: Float
+} deriving (Show)
 pedrito = Nomus {
     alas = True,
     cantBrazos = 10,
     cantOjos = 1,
     colorDePiel = "Verde",
     cantVida = 500,
-    fuerza = 7000
+    fuerza = 7000,
+    poder = [superFuerza, fuego]
+}
+fuego = Poder {
+    cantCuracion = 0,
+    cantDanio = 0,
+    rango = 200,
+    probabilidadDanioCritico = 1.5
+}
+superFuerza = Poder {
+    cantCuracion = 2,
+    cantDanio = 10,
+    rango = 4,
+    probabilidadDanioCritico = 0.5
+}
+regeneracion = Poder {
+    cantCuracion = 10,
+    cantDanio = 0,
+    rango = 20,
+    probabilidadDanioCritico = 0
 }
 -- Diferencia entre el tipo y el constructor
 -- Qué diferencia hay entre pasarle Nomus acá abajo y pasarle (unNomus a b o p v f) → Sirve para abrir paquete y hacer pattern matching
@@ -43,4 +69,27 @@ puedeVer :: Nomus -> Bool
 puedeVer nomu | (cantOjos nomu)>0 = True
               | (cantOjos nomu)==0 = False
 
+-- Otra cosa que no contemplamos es que los Nomus pueden tener muchos poderes,
+-- como super regeneración, super fuerza, fuego, y teletransportación, entre otros…
+-- Sabemos que un poder tiene:
+-- - Cantidad de curación por uso
+-- - Cantidad de daño por uso
+-- - Rango de ataque
+-- - Probabilidad de daño crítico
 
+-- Se pide:
+-- 1) Averiguar la probabilidad de daño crítico del último poder que un Nomu
+-- consiguió.
+-- 2) Saber si un poder es usado cuerpo a cuerpo, esto está definido por su rango
+-- de ataque, siendo cuerpo a cuerpo si el rango es menor a 100.
+-- 3) Saber si un poder es solamente de curación(esto pasa cuando no tiene
+-- cantidad de daño por uso y si tiene curación por uso)
+
+devuelveProbabilidadUltimoPoder :: Nomus -> Float
+devuelveProbabilidadUltimoPoder (Nomus _ _ _ _ _ _ poder) = probabilidadDanioCritico (last poder)
+
+esCuerpoACuerpo :: Poder -> Bool
+esCuerpoACuerpo poder = rango (poder) < 100
+
+esSoloCuracion :: Poder -> Bool
+esSoloCuracion poder = cantDanio (poder) == 0 && cantCuracion (poder) /= 0
