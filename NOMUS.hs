@@ -12,11 +12,11 @@
 -- - Por último, los nomus high-end poseen una fuerza mayor a 10000
 -- - En otro caso son categoría “pichi” -->
 
-data Nomus = Nomus {
+data Nomus = UnNomus {
     alas :: Bool,
     cantBrazos :: Int,
     cantOjos :: Int,
-    colorDePiel :: String,
+    colorDePiel :: [Char],
     cantVida :: Float,
     fuerza :: Float,
     poder :: [Poder]
@@ -28,7 +28,7 @@ data Poder = Poder {
     rango :: Int,
     probabilidadDanioCritico :: Float
 } deriving (Show)
-pedrito = Nomus {
+pedrito = UnNomus {
     alas = True,
     cantBrazos = 10,
     cantOjos = 1,
@@ -86,7 +86,7 @@ puedeVer nomu | (cantOjos nomu)>0 = True
 -- cantidad de daño por uso y si tiene curación por uso)
 
 devuelveProbabilidadUltimoPoder :: Nomus -> Float
-devuelveProbabilidadUltimoPoder (Nomus _ _ _ _ _ _ poder) = probabilidadDanioCritico (last poder)
+devuelveProbabilidadUltimoPoder (UnNomus _ _ _ _ _ _ poder) = probabilidadDanioCritico (last poder)
 
 esCuerpoACuerpo :: Poder -> Bool
 esCuerpoACuerpo poder = rango (poder) < 100
