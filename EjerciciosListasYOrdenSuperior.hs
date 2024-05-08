@@ -1,3 +1,4 @@
+import System.Directory (createDirectoryIfMissing)
 sumaLista :: [Int] -> Int
 sumaLista = sum
 
@@ -198,3 +199,105 @@ hayAlgunNegativo lista algo = any (<0) lista
 -- Si pongo:
 -- Main> aplicarFunciones[(*4),even,abs] 8 
 -- da error. ¿Por qué? 
+aplicarFunciones :: [a -> b] -> a -> [b]
+aplicarFunciones listaFunciones valor = map (\f->f valor) listaFunciones
+
+
+-- Definir la función sumaF/2, que dadas una lista de funciones y un número, devuelve la suma del resultado de aplicar las funciones al número. P.ej.
+-- Main> sumaF[(*4),(+3),abs] (-8) 
+-- -29 
+sumaF :: Num b => [a -> b] -> a -> b
+sumaF lista num = sum (aplicarFunciones lista num)
+
+-- Un programador Haskell está haciendo las cuentas para un juego de fútbol virtual 
+-- (como el Hattrick o el ManagerZone). En un momento le llega la información sobre 
+-- la habilidad de cada jugador de un equipo, que es un número entre 0 y 12, y 
+-- la orden de subir la forma de todos los jugadores en un número entero; p.ej., subirle 2 la forma a cada jugador.
+--  Ahora, ningún jugador puede tener más de 12 de habilidad; si un jugador tiene 11 y la orden es subir 2, pasa a 12, no a 13; si estaba en 
+--  12 se queda en 12. Escribir una función subirHabilidad/2 que reciba un número (que se supone positivo sin validar) y una lista de números, y 
+--  le suba la habilidad a cada jugador cuidando que ninguno se pase de 12. P.ej. 
+-- Main> subirHabilidad 2 [3,6,9,10,11,12] 
+-- [5,8,11,12,12,12] 
+
+subirHabilidad :: Int -> [Int] -> [Int]
+subirHabilidad num = map (sumaMenorA12 num)
+
+sumaMenorA12 :: Int -> Int -> Int
+sumaMenorA12 x y | 12-x <= y = x + y
+                 | otherwise = 12
+
+--13Ahora el requerimiento es más genérico: hay que cambiar la habilidad de cada jugador 
+-- según una función que recibe la vieja habilidad y devuelve la nueva. Armar: una función 
+-- flimitada que recibe una función f y un número n, y devuelve f n garantizando que quede 
+-- entre 0 y 12 (si f n < 0 debe devolver 0, si f n > 12 debe devolver 12). 
+-- P.ej. 
+-- Main> flimitada (*2) 9 
+-- 12 
+-- pues 9*2 = 18 > 12 
+
+-- Main> flimitada (+(-4)) 3 
+-- 0 
+-- pues 3-4 = -1 < 0 
+
+-- Main> flimitada (*2) 5 
+-- 10 
+-- pues 5*2 = 10 que está en rango Hacerlo en una sola línea y sin guardas. Ayuda: usar min y max.
+
+-- Definir una función cambiarHabilidad/2, que reciba una función f y una lista de habilidades, y devuelva el resultado de 
+-- aplicar f con las garantías de rango que da flimitada. 
+
+-- P.ej. 
+-- Main> cambiarHabilidad (*2) [2,4,6,8,10] 
+-- [4,8,12,12,12] 
+
+-- Usar cambiarHabilidad/2 para llevar a 4 a los que tenían menos de 4, dejando como estaban al resto. 
+
+-- P.ej. 
+-- Main> cambiarHabilidad ... [2,4,5,3,8] 
+-- [4,4,5,4,8] 
+-- Lo que hay que escribir es completar donde están los puntitos.
+fLimitada :: (Int -> Int) -> Int -> Int
+fLimitada f n | f n < 0 = 0
+              | f n > 12 = 12
+              | n < 4 = 4
+              | otherwise = f n
+
+cambiarHabilidad :: (Int -> Int) -> [Int] -> [Int]
+cambiarHabilidad f lista = map (fLimitada f) lista
+
+primerosPares :: [Int] -> [Int]
+primerosPares = takeWhile even
+
+primerosDivisoresDeN :: [Int] -> Int -> [Int]
+primerosDivisoresDeN lista n = takeWhile (esDivisor n) lista
+
+primerosNoDivisoresDeN :: [Int] -> Int -> [Int]
+primerosNoDivisoresDeN lista n = takeWhile (not . esDivisor n) lista
+--(16)
+huboMesMejorDe :: [Int] -> [Int] -> Int -> Bool
+huboMesMejorDe ingresos egresos n = any (> n) (diferenciaIE ingresos egresos)
+
+diferenciaIE :: [Int] -> [Int] -> [Int]
+diferenciaIE ingresos egresos = map (\t->fst t - snd t) (zip ingresos egresos)
+--(17)
+crecimientoAnual :: Int -> Int
+crecimientoAnual edad | 1 < edad && edad < 10 = 24-edad*2
+                      | edad <= 15 = 4
+                      | edad <= 17 = 2
+                      | edad <= 19 = 1
+                      | otherwise = 0
+
+crecimientoEntreEdades :: Int -> Int -> Int
+crecimientoEntreEdades e1 e2 = sum(map crecimientoAnual [e1..e2])
+
+alturasEnUnAnio :: Int -> [Int] -> [Int]
+alturasEnUnAnio edad = map (\a->a + crecimientoAnual edad)
+
+alturaEnEdades :: Int -> Int -> [Int] -> [Int]
+alturaEnEdades altura edadA = map (\e-> crecimientoEntreEdades edadA e + altura)
+
+--(18)
+dispersion :: [Int] -> (Int,Int)
+dispersion lista = (foldl (\a -> max a) 0 lista , foldl (\a -> min a) 1000 lista )
+
+

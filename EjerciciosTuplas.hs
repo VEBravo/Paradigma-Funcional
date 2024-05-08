@@ -77,16 +77,18 @@ promociono (nota1, nota2) = nota1 + nota2 >= 15 && nota1 >= 7 && nota2 >=7
 --pudiendo promocionar con los parciales (o sea sin recup.), igual rindió al menos un recup. Vale definir funciones auxiliares. 
 -- Hacer una definición que no use pattern matching, en las eventuales funciones auxiliares tampoco; o sea, manejarse siempre con fst y snd.
 notasFinales :: ((Int, Int),(Int, Int)) -> (Int, Int)
-notasFinales ((parc1,parc2),(recup1,recup2)) = (max(parc1, recup1),max(parc2, recup2))
+notasFinales ((parc1, parc2), (recup1, recup2)) = (max parc1 recup1, max parc2 recup2)
 
-recuperoDeGusto ::  ((Int, Int),(Int, Int)) -> Bool
-recuperoDeGusto ((parc1,parc2),(recup1,recup2)) = promocion (fst((parc1,parc2),(recup1,recup2))) &&  (fst(snd((parc1,parc2),(recup1,recup2))) /= -1 || snd(snd((parc1,parc2),(recup1,recup2)))/=-1)
+recuperoDeGusto ((parc1, parc2), (recup1, recup2)) = promociono (fst ((parc1, parc2), (recup1, recup2))) && (fst (snd ((parc1, parc2), (recup1, recup2))) /= -1 || snd (snd ((parc1, parc2), (recup1, recup2))) /= -1)
 
 --6()
 -- Definir la función esMayorDeEdad, que dada una tupla de 2 elementos (persona, edad) me devuelva True si es mayor de 21 años y False en caso contrario. Por Ej:.
 -- Main> esMayorDeEdad (juan,18) 
 -- False 
 -- Nota: Definir la función utilizando aplicación parcial y composición.
+esMayorDeEdad :: (String, Int) -> Bool
+esMayorDeEdad = (18 >) . snd
+
 --7()
 -- Definir la función calcular, que recibe una tupla de 2 elementos, si el primer elemento es par lo duplica, sino lo deja como está y con el segundo 
 -- elemento en caso de ser impar le suma 1 y si no deja esté último como esta. 
@@ -95,3 +97,9 @@ recuperoDeGusto ((parc1,parc2),(recup1,recup2)) = promocion (fst((parc1,parc2),(
 -- Main> calcular (3,7)
 -- (3,8) 
 -- Nota: Resolverlo utilizando aplicación parcial y composición. 
+calcular :: (Int, Int) -> (Int, Int)
+calcular tupla | (even . fst) tupla && (odd . snd) tupla = (((2 *).fst) tupla, ((1 -) . snd) tupla)
+               | (even . fst) tupla = (((2 *).fst) tupla, snd tupla)
+               | (odd . snd) tupla = (((2 *).fst) tupla, snd tupla)
+               | otherwise = tupla
+
