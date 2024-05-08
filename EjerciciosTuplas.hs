@@ -82,5 +82,16 @@ notasFinales ((parc1,parc2),(recup1,recup2)) = (max(parc1, recup1),max(parc2, re
 recuperoDeGusto ::  ((Int, Int),(Int, Int)) -> Bool
 recuperoDeGusto ((parc1,parc2),(recup1,recup2)) = promocion (fst((parc1,parc2),(recup1,recup2))) &&  (fst(snd((parc1,parc2),(recup1,recup2))) /= -1 || snd(snd((parc1,parc2),(recup1,recup2)))/=-1)
 
---6()   
---7()   
+--6()
+-- Definir la función esMayorDeEdad, que dada una tupla de 2 elementos (persona, edad) me devuelva True si es mayor de 21 años y False en caso contrario. Por Ej:.
+-- Main> esMayorDeEdad (juan,18) 
+-- False 
+-- Nota: Definir la función utilizando aplicación parcial y composición.
+--7()
+-- Definir la función calcular, que recibe una tupla de 2 elementos, si el primer elemento es par lo duplica, sino lo deja como está y con el segundo 
+-- elemento en caso de ser impar le suma 1 y si no deja esté último como esta. 
+-- Main> calcular (4,5)
+-- (8,6) 
+-- Main> calcular (3,7)
+-- (3,8) 
+-- Nota: Resolverlo utilizando aplicación parcial y composición. 
