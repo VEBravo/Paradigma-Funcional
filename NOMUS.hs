@@ -28,15 +28,9 @@ data Poder = Poder {
     rango :: Int,
     probabilidadDanioCritico :: Float
 } deriving (Show)
-pedrito = UnNomus {
-    alas = True,
-    cantBrazos = 10,
-    cantOjos = 1,
-    colorDePiel = "Verde",
-    cantVida = 500,
-    fuerza = 7000,
-    poder = [superFuerza, fuego]
-}
+pedrito = UnNomus {True 10 1 "Verde" 500 7000 [superFuerza, fuego]}
+
+
 fuego = Poder {
     cantCuracion = 0,
     cantDanio = 0,
@@ -55,8 +49,6 @@ regeneracion = Poder {
     rango = 20,
     probabilidadDanioCritico = 0
 }
--- Diferencia entre el tipo y el constructor
--- Qué diferencia hay entre pasarle Nomus acá abajo y pasarle (unNomus a b o p v f) → Sirve para abrir paquete y hacer pattern matching
 
 asignaCategoria :: Nomus -> String
 asignaCategoria nomu | f>10000 = "HighEnd"
@@ -68,6 +60,20 @@ asignaCategoria nomu | f>10000 = "HighEnd"
 puedeVer :: Nomus -> Bool
 puedeVer nomu | (cantOjos nomu)>0 = True
               | (cantOjos nomu)==0 = False
+
+entrenar tiempo nomu = UnNomu {
+    --alas = alas nomu,
+    -- cantBrazos = ,
+    -- cantOjos = cantOjos nomu,
+    -- colorDePiel = colorDePiel nomu,
+    -- cantVida = cantVida nomu,
+    fuerza = fuerza nomu + tiempo,
+    -- poder = poder nomu
+} deriving (Show)
+
+entrenar' :: Nomu -> Int
+entrenar' (UnNomu alas _ fuerza _ _ vida) = fuerza + vida + alas
+
 
 -- Otra cosa que no contemplamos es que los Nomus pueden tener muchos poderes,
 -- como super regeneración, super fuerza, fuego, y teletransportación, entre otros…
