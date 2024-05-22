@@ -65,7 +65,7 @@ pico :: [Material] -> Int -> Material
 pico = (!!)
 
 machete :: Herramienta
-machete materiales = (!!) materiales (div (length materiales) 2)
+machete materiales = flip.(!!).(flip.(div 2).length) materiales
 -- Toma el 
 
 
